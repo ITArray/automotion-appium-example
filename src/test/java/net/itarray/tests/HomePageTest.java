@@ -3,10 +3,10 @@ package net.itarray.tests;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import net.itarray.automotion.validation.ResponsiveUIValidator;
+import net.itarray.automotion.validation.properties.Condition;
 import net.itarray.utils.DriverUtils;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -61,10 +61,10 @@ public class HomePageTest {
         openNavigationDrawer();
         openNavigationDrawer();
         openMenu("Help");
-        Assert.assertTrue(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Home page']", 10) != null);
-        Assert.assertTrue(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Colors memorising']", 10) != null);
-        Assert.assertTrue(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Crazy Fingers']", 10) != null);
-        Assert.assertTrue(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Colors in the Fog']", 10) != null);
+        softAssertions.assertThat(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Home page']", 10) != null);
+        softAssertions.assertThat(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Colors memorising']", 10) != null);
+        softAssertions.assertThat(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Crazy Fingers']", 10) != null);
+        softAssertions.assertThat(driverUtils.findElementVertically(DriverUtils.Strategy.XPATH, "//android.view.View[@content-desc='Colors in the Fog']", 10) != null);
         acceptModal();
         openMenu("Crazy Fingers");
         acceptModal();
@@ -148,6 +148,16 @@ public class HomePageTest {
         softAssertions.assertThat(startButtonResult).overridingErrorMessage("Start Button is aligned properly");
         driverUtils.findElement(DriverUtils.Strategy.ID, packageName + ":id/startButton").click();
         WebElement tapButton = driverUtils.findElement(DriverUtils.Strategy.ID, packageName + ":id/imageTapButton");
+
+        boolean tapButtonResult = uiValidator.snapshot("Tap button")
+                .findElement(tapButton, "Tap button")
+                .isCenteredOnPageHorizontally()
+                .isCenteredOnPageVertically() // Will be failed
+                .hasWidth(Condition.between(300).and(400)) // Will be failed
+                .validate();
+
+        softAssertions.assertThat(startButtonResult).overridingErrorMessage("Start Button is aligned properly");
+        softAssertions.assertThat(tapButtonResult).overridingErrorMessage("Tap Button is aligned properly");
         Point location =  tapButton.getLocation();
         Dimension size =  tapButton.getSize();
 
